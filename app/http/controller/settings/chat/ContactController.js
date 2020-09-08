@@ -14,7 +14,6 @@ const GetAll = async (req, res) => {
 
         return res.send(chatMembers);
     } catch (e) {
-        console.error(e)
         return res.status(500).send({message: e.message});
     }
 }

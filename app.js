@@ -25,17 +25,22 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/', apiRouter);
-app.use('/api/user/', laravelMiddleware, userRouter);
-
 app.io.on('connection', (socket) => {
     console.log('a user connected');
     socket.on('disconnect', () => {
         console.log('user disconnected');
     });
-    socket.on('chat message', (msg) => {
-        console.log('message: ' + msg);
-    });
+
+    socket.join('receive_messages5')
 });
+
+app.use(function(request, response, next) {
+    request.io = app.io
+    next()
+})
+
+app.use('/api/', apiRouter);
+app.use('/api/user/', laravelMiddleware, userRouter);
+
 
 module.exports = app;
