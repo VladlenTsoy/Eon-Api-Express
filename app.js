@@ -12,6 +12,8 @@ const {socketSetting} = require('./config/socket.config');
 /**/
 const apiRouter = require('./routes/api');
 const userRouter = require('./routes/user');
+/**/
+const socketChannels = require('./channels/index');
 
 const app = express();
 
@@ -25,19 +27,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.io.on('connection', (socket) => {
-    console.log('a user connected');
-    socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
-
-    socket.join('receive_messages5')
-});
-
-app.use(function(request, response, next) {
-    request.io = app.io
-    next()
-})
+app.io.on('connection', socketChannels);
 
 app.use('/api/', apiRouter);
 app.use('/api/user/', laravelMiddleware, userRouter);

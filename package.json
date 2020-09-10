@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "start": "nodemon bin/www",
-    "run-arena": "nodemon app/jobs/arena.js"
+    "run-arena": "nodemon bin/bull-arena.js"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "bull": "^3.18.0",
+    "bull-arena": "^3.2.2",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "~2.6.9",

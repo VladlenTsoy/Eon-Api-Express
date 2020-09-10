@@ -1,14 +1,21 @@
 const {ChatMessage} = require('../../../../models/settings/chat/ChatMessage');
 const {ChatMember} = require('../../../../models/settings/chat/ChatMember');
+const {CheckNotificationCountQueue} = require('../../../../jobs/settings/chat/CheckNotificationCountQueue');
 
 const GetByChatId = async (req, res) => {
     try {
         const {chatId} = req.params
         const {page} = req.query
         const pageSize = 25
+        const user = req.user;
+
+        await ChatMessage.query()
+            .where({chat_id: chatId}).where('user_id', '!=', user.id)
+            .update({status: 'view'})
 
         const messages = await ChatMessage.query()
             .where({chat_id: chatId})
+            .orderBy('created_at', 'desc')
             .page(page - 1, pageSize)
 
         messages.last_page = Math.ceil(messages.total / pageSize)
@@ -35,7 +42,10 @@ const Create = async (req, res) => {
         })
 
         const contact = await ChatMember.query().findOne({chat_id: chatId, user_id: userId})
-        req.io.emit(`receive_messages${contact.contact_id}`, chatMessage)
+
+        /***/
+        req.io.emit(`chat_receive_messages_${contact.contact_id}`, chatMessage)
+        await CheckNotificationCountQueue(req.io, {userId: contact.contact_id})
 
         return res.send(chatMessage);
     } catch (e) {

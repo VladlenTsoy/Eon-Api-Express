@@ -6,7 +6,11 @@ const GetAll = async (req, res) => {
 
         const chatMembers = await ChatMember.query()
             .where('user_id', user.id)
-            .withGraphFetched('contact(selectOnlyForContact)')
+            .withGraphFetched(`[
+                contact(selectOnlyForContact),
+                last_message(orderByCreatedAt),
+                not_read(countNew)
+            ]`)
             .select(['chat_id'])
 
         if (!chatMembers)
