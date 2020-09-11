@@ -1,6 +1,5 @@
 const {ChatMessage} = require('../../../../models/settings/chat/ChatMessage');
 const {ChatMember} = require('../../../../models/settings/chat/ChatMember');
-const {CheckNotificationCountQueue} = require('../../../../jobs/settings/chat/CheckNotificationCountQueue');
 
 const GetByChatId = async (req, res) => {
     try {
@@ -35,17 +34,18 @@ const Create = async (req, res) => {
         if (user.id !== parseInt(userId))
             return res.status(500).send({message: ''});
 
-        const chatMessage = await ChatMessage.query().insertAndFetch({
-            chat_id: chatId,
-            user_id: userId,
-            message
-        })
+        const contact = await ChatMember.query().where('user_id', '!=', user.id).findOne({chat_id: chatId})
 
-        const contact = await ChatMember.query().findOne({chat_id: chatId, user_id: userId})
+        const chatMessage = await ChatMessage.query()
+            .insertAndFetch({
+                chat_id: chatId,
+                user_id: userId,
+                status: contact.status === 'online' ? 'view' : 'new',
+                message
+            })
 
         /***/
-        req.io.emit(`chat_receive_messages_${contact.contact_id}`, chatMessage)
-        await CheckNotificationCountQueue(req.io, {userId: contact.contact_id})
+        req.io.emit(`chat_receive_messages_${contact.user_id}`, [chatMessage])
 
         return res.send(chatMessage);
     } catch (e) {

@@ -1,7 +1,7 @@
 const {ChatMember} = require('../../models/settings/chat/ChatMember');
 const {ChatMessage} = require('../../models/settings/chat/ChatMessage');
 
-module.exports.CheckNotificationCount = async (socket, data) => {
+module.exports.CheckReceiveMessages = async (socket, data) => {
     const {userId} = data
 
     // TODO - QueryBuilder#pluck is deprecated. This method will be removed in version 3.0
@@ -11,7 +11,26 @@ module.exports.CheckNotificationCount = async (socket, data) => {
         .whereIn('chat_id', chatIds)
         .where('user_id', '!=', userId)
         .where('status', '=', 'new')
-        .select('id')
 
-    socket.emit(`chat_receive_notification_count_${userId}`, messages.length)
+    socket.emit(`chat_receive_messages_${userId}`, messages)
+}
+
+module.exports.Joined = async (socket, data) => {
+    const {userId, chatId} = data
+
+    await ChatMessage.query()
+        .where({chat_id: chatId}).where('user_id', '!=', userId)
+        .update({status: 'view'})
+
+    await ChatMember.query()
+        .where({user_id: userId, chat_id: chatId})
+        .update({status: 'online'})
+}
+
+module.exports.Left = async (socket, data) => {
+    const {userId, chatId} = data
+
+    await ChatMember.query()
+        .where({user_id: userId, chat_id: chatId})
+        .update({status: 'offline'})
 }

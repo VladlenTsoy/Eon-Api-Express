@@ -5,6 +5,7 @@ exports.up = function(knex) {
         table.integer('chat_id')
         table.integer('user_id')
         table.integer('contact_id')
+        table.enum('status', ['online', 'offline']).default('offline')
         table.timestamps(true, true);
     })
 };
