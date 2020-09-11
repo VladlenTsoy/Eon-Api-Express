@@ -9,9 +9,6 @@ class ChatMessage extends Model {
         orderByCreatedAt(builder) {
             builder.orderBy('created_at', 'desc');
         },
-        countNew(builder) {
-            builder.where('status', 'new')
-        }
     }
 }
 

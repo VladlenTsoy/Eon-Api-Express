@@ -9,7 +9,6 @@ const GetAll = async (req, res) => {
             .withGraphFetched(`[
                 contact(selectOnlyForContact),
                 last_message(orderByCreatedAt),
-                not_read(countNew)
             ]`)
             .select(['chat_id'])
 

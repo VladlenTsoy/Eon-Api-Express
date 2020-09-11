@@ -22,15 +22,6 @@ class ChatMember extends Model {
                 to: 'chat_messages.chat_id',
             },
         },
-        not_read: {
-            filter: query => query.select('chat_messages.id'),
-            relation: Model.HasManyRelation,
-            modelClass: ChatMessage,
-            join: {
-                from: 'chat_members.chat_id',
-                to: 'chat_messages.chat_id',
-            },
-        }
     }
 }
 

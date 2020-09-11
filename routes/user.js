@@ -7,7 +7,8 @@ const router = express.Router();
 /* GET home page. */
 router.get('/contacts', ContactController.GetAll);
 /* GET home page. */
-router.get('/messages/:chatId', MessagesController.GetByChatId);
+router.get('/messages/user/:userId', MessagesController.GetByUserId);
+router.get('/messages/chat/:chatId', MessagesController.GetByChatId);
 router.post('/message', MessagesController.Create);
 
 module.exports = router;
