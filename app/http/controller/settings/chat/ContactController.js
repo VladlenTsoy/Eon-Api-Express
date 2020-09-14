@@ -1,24 +1,29 @@
-const {ChatMember} = require('../../../../models/settings/chat/ChatMember');
+const {User} = require('../../../../models/User');
+const {Group} = require('../../../../models/Group');
 
-const GetAll = async (req, res) => {
+const GetAllBySearch = async (req, res) => {
     try {
         const user = req.user;
+        const {search} = req.body;
 
-        const chatMembers = await ChatMember.query()
-            .where('user_id', user.id)
-            .withGraphFetched(`[
-                contact(selectOnlyForContact),
-                last_message(orderByCreatedAt),
-            ]`)
-            .select(['chat_id'])
+        //
+        const groups = await Group.query()
+            .where({teacher_id: user.id, hide: null})
+            .select('id')
+            .pluck('id')
 
-        if (!chatMembers)
-            return res.status(500).send({message: ''})
+        const students = await User.query()
+            .where({delete_id: null, access: 'student'})
+            .whereIn('group_id', groups)
+            .withGraphFetched('group')
+            .modify('search', search)
+            .modify('notBlocked')
+            .modify('selectOnlyForContact')
 
-        return res.send(chatMembers);
+        return res.send(students);
     } catch (e) {
         return res.status(500).send({message: e.message});
     }
 }
 
-module.exports = {GetAll}
+module.exports = {GetAllBySearch}
