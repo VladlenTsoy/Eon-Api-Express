@@ -3,31 +3,53 @@ const Password = require('objection-password')();
 const {Group} = require('../models/Group');
 
 class User extends Model {
-    static get tableName() {
-        return 'users';
-    }
+    //
+    static tableName = 'users'
+    //
+    static hidden = ['password']
 
-    static get hidden() {
-        return ['password'];
-    }
-
+    //
     static modifiers = {
+
+        /**
+         *
+         * @param builder
+         */
         selectOnlyForContact(builder) {
-            builder.select('id', 'first_name', 'last_name', 'access', 'image');
+            builder.withGraphFetched('group')
+                .select('id', 'first_name', 'last_name', 'access', 'image');
         },
+
+        /**
+         * Поиск пользователя
+         * @param builder
+         * @param search
+         */
         search(builder, search) {
-            builder.where('id', 'LIKE', `%${search}%`)
-                .orWhere('first_name', 'LIKE', `%${search}%`)
-                .orWhere('last_name', 'LIKE', `%${search}%`)
-                .orWhere('login', 'LIKE', `%${search}%`)
-                .orWhere('email', 'LIKE', `%${search}%`);
+            builder.where((_builder) => {
+                _builder.where('id', 'LIKE', `%${search}%`)
+                    .orWhere('first_name', 'LIKE', `%${search}%`)
+                    .orWhere('last_name', 'LIKE', `%${search}%`)
+                    .orWhere('login', 'LIKE', `%${search}%`)
+                    .orWhere('email', 'LIKE', `%${search}%`)
+            });
         },
-        blocked (builder) {
+
+        /**
+         *
+         * @param builder
+         */
+        blocked(builder) {
             builder.whereRaw(`
                 id IN (SELECT id FROM lock_statuses WHERE unblock = null)
             `)
         },
-        notBlocked (builder) {
+
+        /**
+         *
+         * @param builder
+         */
+        notBlocked(builder) {
             builder.whereRaw(`
                 id NOT IN (SELECT id FROM lock_statuses WHERE unblock = null)
             `)

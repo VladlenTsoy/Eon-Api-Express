@@ -1,9 +1,7 @@
 const Model = require('../../config/knex.config');
 
 class Group extends Model {
-    static get tableName() {
-        return 'groups';
-    }
+    static tableName = 'groups'
 }
 
 module.exports = {Group}

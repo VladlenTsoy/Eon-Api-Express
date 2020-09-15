@@ -5,14 +5,25 @@ const MessagesController = require('../app/http/controller/settings/chat/Message
 
 const router = express.Router();
 
-/* GET home page. */
+
+
+
+
+/** Чат **/
+
+// Список чатов
 router.get('/chats', ChatController.GetAll);
-router.post('/chat', ChatController.Create);
-/* GET home page. */
-router.post('/contacts/search', ContactController.GetAllBySearch);
-/* GET home page. */
+// Создать чат
+router.post('/chat', ChatController.CreateValidate, ChatController.Create);
+
+// Поиск контактов
+router.post('/contacts/search', ContactController.GetAllBySearchValidate, ContactController.GetAllBySearch);
+
+// Непрочитанные сообщения пользователя
 router.get('/messages/user/:userId', MessagesController.GetByUserId);
+// Все сообщения чата
 router.get('/messages/chat/:chatId', MessagesController.GetByChatId);
+// Создать сообщение
 router.post('/message', MessagesController.Create);
 
 module.exports = router;

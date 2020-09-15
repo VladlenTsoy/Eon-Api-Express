@@ -1,24 +1,44 @@
 const {User} = require('../../../../models/User');
-const {Group} = require('../../../../models/Group');
+const {body, validationResult} = require('express-validator');
 
+/**
+ * Проверка валидации
+ */
+const GetAllBySearchValidate = [
+    body('search').not().isEmpty().withMessage('Введите Фамилию, Имя или ID!'),
+];
+
+/**
+ * Поиск контакта
+ * @param req
+ * @param res
+ * @return {Promise<*>}
+ * @constructor
+ */
 const GetAllBySearch = async (req, res) => {
+    // Ошибка валидации
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+        return res.status(422).json({errors: errors.array()});
+
     try {
         const user = req.user;
         const {search} = req.body;
 
-        //
-        const groups = await Group.query()
-            .where({teacher_id: user.id, hide: null})
-            .select('id')
-            .pluck('id')
-
+        // Студентов
         const students = await User.query()
             .where({delete_id: null, access: 'student'})
-            .whereIn('group_id', groups)
-            .withGraphFetched('group')
+            .whereRaw(`
+                group_id IN (
+                    SELECT id FROM groups
+                    WHERE teacher_id = ${user.id}
+                    AND hide IS NULL
+                )
+            `)
             .modify('search', search)
             .modify('notBlocked')
             .modify('selectOnlyForContact')
+            .withGraphFetched('group')
 
         return res.send(students);
     } catch (e) {
@@ -26,4 +46,4 @@ const GetAllBySearch = async (req, res) => {
     }
 }
 
-module.exports = {GetAllBySearch}
+module.exports = {GetAllBySearchValidate, GetAllBySearch}

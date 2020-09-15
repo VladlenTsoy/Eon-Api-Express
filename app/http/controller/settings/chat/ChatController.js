@@ -1,6 +1,14 @@
 const {ChatMember} = require('../../../../models/settings/chat/ChatMember');
 const {Chat} = require('../../../../models/settings/chat/Chat');
+const {body, validationResult} = require('express-validator');
 
+/**
+ * Вывод всех чатов
+ * @param req
+ * @param res
+ * @return {Promise<*>}
+ * @constructor
+ */
 const GetAll = async (req, res) => {
     try {
         const user = req.user;
@@ -22,11 +30,40 @@ const GetAll = async (req, res) => {
     }
 }
 
-const Create = async (req, res) => {
-    try {
+/**
+ * Проверка валидации при создании чата
+ */
+const CreateValidate = [
+    body('contactId').not().isEmpty().withMessage('Вы не выбрали пользователя!'),
+];
 
+/**
+ * Создать чат
+ * @param req
+ * @param res
+ * @return {Promise<*>}
+ * @constructor
+ */
+const Create = async (req, res) => {
+    // Ошибка валидации
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+        return res.status(422).json({errors: errors.array()});
+
+    try {
         const user = req.user
         const {contactId} = req.body
+
+        const checkContact = await ChatMember.query()
+            .findOne({user_id: user.id, contact_id: contactId})
+            .withGraphFetched(`[
+                contact(selectOnlyForContact),
+                last_message(orderByCreatedAt),
+            ]`)
+            .select(['chat_id'])
+
+        if (checkContact)
+            return res.send(checkContact);
 
         const chat = await Chat.query().insertAndFetch({})
 
@@ -47,4 +84,4 @@ const Create = async (req, res) => {
     }
 }
 
-module.exports = {GetAll, Create}
+module.exports = {GetAll, CreateValidate, Create}
