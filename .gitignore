@@ -5,3 +5,4 @@ package-lock.json
 yarn.lock
 .env
 eon-cabinet-b273ca690c3c.json
+/public/print/lists/

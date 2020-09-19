@@ -15,7 +15,6 @@ const GetAlgorithmBySetting = {
     // Алгоритм
     algorithm: false,
 
-
     // Алгоритмы на плюс
     plus: Plus,
     minus: Minus,
@@ -34,6 +33,12 @@ const GetAlgorithmBySetting = {
                         this.multiply() :
                         mode === 'divide' ?
                             this.divide() : this.plus()
+    },
+
+    multiplicationAndDivision(param) {
+        const algorithms = this.selectModeAlgorithm(param.mode)
+        const theme = param.theme || false;
+        return algorithms[param.length][param.type](theme)
     },
 
     additionAndSubtraction(param) {
@@ -75,6 +80,8 @@ const GetAlgorithmBySetting = {
 
         return response;
     },
+
+    //
     select(setting) {
         const response = []
         const count = setting.mode === 'multiply' || setting.mode === 'divide' ?
@@ -83,14 +90,10 @@ const GetAlgorithmBySetting = {
 
         for (let i = 1; i <= count; i++) {
             this.amount = 0;
-            if (setting.mode === 'multiply' || setting.mode === 'divide') {
-                response.push()
-                // array_push($response, $this->multiplicationAndDivision($request->all()));
-                // $task = 4;
-            } else {
+            if (setting.mode === 'multiply' || setting.mode === 'divide')
+                response.push(this.multiplicationAndDivision(setting))
+            else
                 response.push(this.additionAndSubtraction(setting))
-                // $task = 2;
-            }
         }
 
         return response

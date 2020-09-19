@@ -67,7 +67,9 @@ const Create = async (req, res) => {
 
         const chat = await Chat.query().insertAndFetch({})
 
+        //
         await ChatMember.query().insert({user_id: user.id, contact_id: contactId, chat_id: chat.id})
+        //
         await ChatMember.query().insert({user_id: contactId, contact_id: user.id, chat_id: chat.id})
 
         const chatMember = await ChatMember.query()

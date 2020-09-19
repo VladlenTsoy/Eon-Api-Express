@@ -1,8 +1,9 @@
-const Model = require('../../config/knex.config');
-const moment = require('moment')
+const Model = require('../../../config/knex.config');
 
-class Group extends Model {
-    static tableName = 'groups'
+class Language extends Model {
+    static get tableName() {
+        return 'languages';
+    }
 
     $beforeInsert() {
         this.created_at = moment().format('YYYY-MM-DD HH:mm:ss')
@@ -14,4 +15,4 @@ class Group extends Model {
     }
 }
 
-module.exports = {Group}
+module.exports = {Language}
