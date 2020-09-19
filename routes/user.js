@@ -1,4 +1,5 @@
 const express = require('express');
+const SelectAlgorithmController = require('../app/http/controller/settings/algorithm/SelectAlgorithmController');
 const ChatController = require('../app/http/controller/settings/chat/ChatController');
 const ContactController = require('../app/http/controller/settings/chat/ContactController');
 const MessagesController = require('../app/http/controller/settings/chat/MessagesController');
@@ -7,6 +8,10 @@ const router = express.Router();
 
 
 
+/** Печать листов **/
+
+// Печать листа анзан
+router.post('/algorithm/list', SelectAlgorithmController.GetPrint);
 
 
 /** Чат **/
