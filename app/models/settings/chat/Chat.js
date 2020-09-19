@@ -1,4 +1,5 @@
 const Model = require('../../../../config/knex.config');
+const moment = require('moment')
 
 class Chat extends Model {
     static tableName = 'chats'

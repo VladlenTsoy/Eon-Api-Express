@@ -1,6 +1,7 @@
 const Model = require('../../../../config/knex.config');
 const {User} = require('../../User');
 const {ChatMessage} = require('./ChatMessage');
+const moment = require('moment')
 
 class ChatMember extends Model {
     static tableName = 'chat_members';

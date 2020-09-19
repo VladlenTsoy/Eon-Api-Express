@@ -1,4 +1,5 @@
 const Model = require('../../../config/knex.config');
+const moment = require('moment')
 
 class LockStatus extends Model {
     static tableName = 'lock_statuses'

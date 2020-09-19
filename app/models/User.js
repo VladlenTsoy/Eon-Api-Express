@@ -1,6 +1,7 @@
 const Model = require('../../config/knex.config');
 const Password = require('objection-password')();
 const {Group} = require('../models/Group');
+const moment = require('moment')
 
 class User extends Model {
     static tableName = 'users'

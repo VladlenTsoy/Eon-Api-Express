@@ -1,4 +1,5 @@
 const Model = require('../../../config/knex.config');
+const moment = require('moment')
 
 class OauthAccessToken extends Model {
     static tableName = 'oauth_access_tokens'
