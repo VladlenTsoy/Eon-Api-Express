@@ -1,8 +1,15 @@
 const Model = require('../../../config/knex.config');
 
-class OauthAccessToken extends Model{
-    static get tableName() {
-        return 'oauth_access_tokens';
+class OauthAccessToken extends Model {
+    static tableName = 'oauth_access_tokens'
+
+    $beforeInsert() {
+        this.created_at = moment().format('YYYY-MM-DD HH:mm:ss')
+        this.updated_at = moment().format('YYYY-MM-DD HH:mm:ss')
+    }
+
+    $beforeUpdate() {
+        this.updated_at = moment().format('YYYY-MM-DD HH:mm:ss')
     }
 }
 

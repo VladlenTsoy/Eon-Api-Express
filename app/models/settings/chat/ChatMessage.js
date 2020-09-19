@@ -1,14 +1,21 @@
 const Model = require('../../../../config/knex.config');
 
 class ChatMessage extends Model {
-    static get tableName() {
-        return 'chat_messages';
-    }
+    static tableName = 'chat_messages';
 
     static modifiers = {
         orderByCreatedAt(builder) {
             builder.orderBy('created_at', 'desc');
         },
+    }
+
+    $beforeInsert() {
+        this.created_at = moment().format('YYYY-MM-DD HH:mm:ss')
+        this.updated_at = moment().format('YYYY-MM-DD HH:mm:ss')
+    }
+
+    $beforeUpdate() {
+        this.updated_at = moment().format('YYYY-MM-DD HH:mm:ss')
     }
 }
 

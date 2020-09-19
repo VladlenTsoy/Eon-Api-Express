@@ -1,9 +1,7 @@
 const Model = require('../../../config/knex.config');
 
 class Language extends Model {
-    static get tableName() {
-        return 'languages';
-    }
+    static tableName = 'languages'
 
     $beforeInsert() {
         this.created_at = moment().format('YYYY-MM-DD HH:mm:ss')

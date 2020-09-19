@@ -3,12 +3,8 @@ const Password = require('objection-password')();
 const {Group} = require('../models/Group');
 
 class User extends Model {
-    //
     static tableName = 'users'
-    //
     static hidden = ['password']
-
-    //
     static modifiers = {
 
         /**
@@ -66,6 +62,15 @@ class User extends Model {
                 to: 'groups.id',
             },
         },
+    }
+
+    $beforeInsert() {
+        this.created_at = moment().format('YYYY-MM-DD HH:mm:ss')
+        this.updated_at = moment().format('YYYY-MM-DD HH:mm:ss')
+    }
+
+    $beforeUpdate() {
+        this.updated_at = moment().format('YYYY-MM-DD HH:mm:ss')
     }
 }
 
