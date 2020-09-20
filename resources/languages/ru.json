@@ -1,0 +1,65 @@
+{
+  "common": {
+    "email_confirmation": "Подтверждение почты",
+    "email_confirmation_enter_code": "Введите код для подтверждения",
+    "email_confirmation_code_sent": "Письмо с кодом подтверждения отправлено",
+    "methods": {
+      "mnemonics": "Мнемотехника",
+      "mental_arithmetic": "Ментальная арифметика"
+    }
+  },
+  "client": {
+    "common": {
+      "loading_user": "Загрузка пользователя",
+      "loading": "Загрузка",
+      "back": "Назад",
+      "submit": "Отправить",
+      "email_confirmation_info": "Подтверждение почты необходимо для защиты ваших данных и получения уведомлений",
+      "send_verification_code": "Отправить код подтверждения",
+      "sent_confirmation_code_by_email": "Мы отправили вам письмо с кодом подтверждения на почту",
+      "confirmation_code": "Код подтверждения",
+      "enter_confirmation_code": "Введите код подтверждения",
+      "resend_code": "Повторно отправить код",
+      "send_letter": "Отправляем письмо",
+      "email_confirmed": "Ваша почта успешно подтверждена",
+      "later": "Позже",
+      "next": "Далее",
+      "ready": "Готово",
+      "student": "Ученик",
+      "teacher": "Учитель",
+      "director": "Директор"
+    },
+    "guest": {
+      "authorization": "Авторизация",
+      "login_to_your_account": "Вход в личный кабинет",
+      "email": "Почта",
+      "enter_email": "Введите почту",
+      "invalid_email": "Введен неверный адрес почты",
+      "password": "Пароль",
+      "enter_password": "Введите пароль",
+      "password_min": "Пароль должен состоять мин. из 5 символов",
+      "password_only_latin": "Только латинский буквы и цифры",
+      "confirm_password": "Подтвердите пароль",
+      "forgot_password": "Забыли пароль",
+      "password_mismatch": "Пароли не совпадают",
+      "login": "Войти",
+      "registration": "Регистрация",
+      "name": "Имя",
+      "enter_name": "Введите имя",
+      "surname": "Фамилия",
+      "enter_surname": "Введите фамилия",
+      "sing_up": "Зарегистрироваться",
+      "password_recovery": "Восстановление пароля",
+      "password_recovery_sub_title": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
+      "select_use_access": "Выберите доступ использования",
+      "select_disciplines": "Выберите дисциплины"
+    }
+  },
+  "server": {
+    "errors": {
+      "duplicate_email": "Аккаунт с данной почтой уже существует!",
+      "invalid_email_password": "Ошибка! Неверно введена эл.почта или пароль!",
+      "invalid_code": "Ошибка! Код не действителен!"
+    }
+  }
+}

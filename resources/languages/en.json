@@ -1,0 +1,43 @@
+{
+  "common": {
+    "methods": {
+      "mnemonics": "Mnemonics",
+      "mental_arithmetic": "Mental arithmetic"
+    }
+  },
+  "client": {
+    "common": {
+      "loading_user": "User loading",
+      "loading": "Loading",
+      "back": "Back",
+      "submit": "Submit"
+    },
+    "guest": {
+      "authorization": "Authorization",
+      "login_to_your_account": "Login to your account",
+      "email": "Email",
+      "enter_email": "Enter Email",
+      "invalid_email": "Invalid email address entered",
+      "password": "Password",
+      "enter_password": "Enter password",
+      "confirm_password": "Confirm password",
+      "forgot_password": "Forgot password",
+      "password_mismatch": "Password mismatch",
+      "login": "Sign In",
+      "registration": "Registration",
+      "name": "First Name",
+      "enter_name": "Enter your first name",
+      "surname": "Last Name",
+      "enter_surname": "Enter your last name",
+      "sing_up": "Sign Up",
+      "password_recovery": "Password recovery",
+      "password_recovery_sub_title": "Lorem ipsum dolor sit amet, consectetur adipisicing elit."
+    }
+  },
+  "server": {
+    "errors": {
+      "duplicate_email": "An account with this mail already exists!",
+      "invalid_email_password": "Error! Invalid email or password!"
+    }
+  }
+}
