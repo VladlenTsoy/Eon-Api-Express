@@ -1,5 +1,5 @@
 const express = require('express');
-const ForgotPasswordController = require('../app/http/controller/auth/ForgotPasswordController');
+const ForgotPasswordController = require('../app/http/controllers/auth/ForgotPasswordController');
 
 const router = express.Router();
 

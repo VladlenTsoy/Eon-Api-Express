@@ -8,12 +8,14 @@ const rateLimit = require("express-rate-limit");
 /**/
 const {corsConfig} = require("./config/cors.config");
 const laravelMiddleware = require("./app/http/middleware/laravel-passport");
+const teacherMiddleware = require("./app/http/middleware/teacher-access");
 const {socketSetting} = require('./config/socket.config');
 const {selectLanguage} = require("./config/language.config");
 
 /**/
 const apiRouter = require('./routes/api');
 const userRouter = require('./routes/user');
+const teacherRouter = require('./routes/teacher');
 /**/
 const socketChannels = require('./channels/index');
 
@@ -41,6 +43,7 @@ app.io.on('connection', socketChannels);
 
 app.use('/api/', apiRouter);
 app.use('/api/user/', laravelMiddleware, userRouter);
+app.use('/api/user/', laravelMiddleware, teacherMiddleware, teacherRouter);
 
 
 module.exports = app;
