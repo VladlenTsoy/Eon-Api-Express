@@ -1,9 +1,8 @@
 const Model = require('../../../config/knex.config');
-const moment = require('moment')
+const moment = require('moment');
 
-class OauthAccessToken extends Model {
-    static tableName = 'oauth_access_tokens'
-    static jsonAttributes = ['scope']
+class EmailConfirmation extends Model {
+    static tableName = 'email_confirmations'
 
     $beforeInsert() {
         this.created_at = moment().format('YYYY-MM-DD HH:mm:ss')
@@ -15,4 +14,4 @@ class OauthAccessToken extends Model {
     }
 }
 
-module.exports = OauthAccessToken;
+module.exports = EmailConfirmation;
