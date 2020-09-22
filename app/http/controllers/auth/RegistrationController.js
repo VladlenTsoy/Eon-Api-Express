@@ -29,7 +29,17 @@ const Index = async (req, res) => {
             return res.status(500).send({message: req.language.server.errors.duplicate_email});
 
         // Регистрация пользователя
-        const user = await UserPassword.query().insertAndFetch({email, password, first_name, last_name, access: 'teacher', center_id: 32, setting: {}})
+        const user = await UserPassword.query().insertAndFetch(
+            {
+                email,
+                password,
+                first_name,
+                last_name,
+                access: 'teacher',
+                center_id: 32,
+                setting: {}
+            }
+        )
 
         // Создание кода
         const code = await createEmailConfirmation(user);

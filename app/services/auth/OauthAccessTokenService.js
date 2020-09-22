@@ -4,13 +4,19 @@ const OauthAccessToken = require('../../models/auth/OauthAccessToken');
 // const md5 = require('md5');
 const axios = require('axios');
 
+/**
+ * Создание токена
+ * @param userId
+ * @param email
+ * @param password
+ * @return {Promise<*>}
+ * @constructor
+ */
 const Create = async (userId, email, password) => {
     // Удалить предыдущий токен
     await OauthAccessToken.query().delete().where({user_id: userId})
 
     const token = await axios.post('http://192.168.1.37:8000/api/login', {login: email, password})
-
-    console.log(token)
     // const hash = md5(userId);
     //
     // // Создание токена

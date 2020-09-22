@@ -4,10 +4,20 @@ const moment = require('moment');
 const {EmailConfirmationQueue} = require("../../../jobs/auth/email-confirmation/EmailConfirmationQueue");
 const {body, validationResult} = require('express-validator');
 
-// Создание записи на проверку почты
+/**
+ * Создание записи на проверку почты
+ * @param user
+ * @return {Promise<*>}
+ */
 const createEmailConfirmation = async (user) => {
     // Создание хеша
     const hash = Math.floor(Math.random() * (99999 - 10000) + 10000);
+
+    // Удаление предыдущих потдверждений
+    await EmailConfirmation.query().where({
+        user_id: user.id,
+        email: user.email
+    }).delete()
 
     // Создания кода подтверждения
     const confCode = await EmailConfirmation.query().insert({

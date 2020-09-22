@@ -1,5 +1,8 @@
 {
   "common": {
+    "email_confirmation": "Подтверждение почты",
+    "email_confirmation_enter_code": "Введите код для подтверждения",
+    "email_confirmation_code_sent": "Письмо с кодом подтверждения отправлено",
     "methods": {
       "mnemonics": "Mnemonics",
       "mental_arithmetic": "Mental arithmetic"
@@ -10,7 +13,21 @@
       "loading_user": "User loading",
       "loading": "Loading",
       "back": "Back",
-      "submit": "Submit"
+      "submit": "Submit",
+      "email_confirmation_info": "Подтверждение почты необходимо для защиты ваших данных и получения уведомлений",
+      "send_verification_code": "Отправить код подтверждения",
+      "sent_confirmation_code_by_email": "Мы отправили вам письмо с кодом подтверждения на почту",
+      "confirmation_code": "Код подтверждения",
+      "enter_confirmation_code": "Введите код подтверждения",
+      "resend_code": "Повторно отправить код",
+      "send_letter": "Отправляем письмо",
+      "email_confirmed": "Ваша почта успешно подтверждена",
+      "later": "Позже",
+      "next": "Далее",
+      "ready": "Готово",
+      "student": "Ученик",
+      "teacher": "Учитель",
+      "director": "Директор"
     },
     "guest": {
       "authorization": "Authorization",
@@ -25,19 +42,23 @@
       "password_mismatch": "Password mismatch",
       "login": "Sign In",
       "registration": "Registration",
+      "registration_sub_title": "Setup a new account in a minute.",
       "name": "First Name",
       "enter_name": "Enter your first name",
       "surname": "Last Name",
       "enter_surname": "Enter your last name",
       "sing_up": "Sign Up",
       "password_recovery": "Password recovery",
-      "password_recovery_sub_title": "Lorem ipsum dolor sit amet, consectetur adipisicing elit."
+      "password_recovery_sub_title": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
+      "select_use_access": "Выберите доступ использования",
+      "select_disciplines": "Выберите дисциплины"
     }
   },
   "server": {
     "errors": {
       "duplicate_email": "An account with this mail already exists!",
-      "invalid_email_password": "Error! Invalid email or password!"
+      "invalid_email_password": "Error! Invalid email or password!",
+      "invalid_code": "Ошибка! Код не действителен!"
     }
   }
 }
