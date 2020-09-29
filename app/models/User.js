@@ -8,7 +8,7 @@ class User extends Model {
     static jsonAttributes = ['setting']
     static modifiers = {
         /**
-         *
+         * Вывод для контактов
          * @param builder
          */
         selectOnlyForContact(builder) {
@@ -32,22 +32,22 @@ class User extends Model {
         },
 
         /**
-         *
+         * Заблокированные
          * @param builder
          */
         blocked(builder) {
             builder.whereRaw(`
-                id IN (SELECT id FROM lock_statuses WHERE unblock = null)
+                id IN (SELECT user_id FROM lock_statuses WHERE unblock IS null)
             `)
         },
 
         /**
-         *
+         * Незаблокированные
          * @param builder
          */
         notBlocked(builder) {
             builder.whereRaw(`
-                id NOT IN (SELECT id FROM lock_statuses WHERE unblock = null)
+                id NOT IN (SELECT user_id FROM lock_statuses WHERE unblock IS null)
             `)
         }
     }
@@ -56,6 +56,7 @@ class User extends Model {
         const {Group} = require('../models/Group');
 
         return {
+            // Вывод группы
             group: {
                 filter: query => query.select('id', 'title'),
                 relation: Model.HasOneRelation,

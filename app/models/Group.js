@@ -1,37 +1,54 @@
 const Model = require('../../config/knex.config');
 const moment = require('moment')
+const {ref} = require('objection');
 
 class Group extends Model {
     static tableName = 'groups'
 
-    static modifiers = {
-        /**
-         * Поиск
-         * @param builder
-         * @param search
-         */
-        search(builder, search) {
-            builder.where((_builder) => {
-                _builder.where('id', 'LIKE', `%${search}%`)
-                    .orWhere('title', 'LIKE', `%${search}%`)
-            });
-        },
+    static get modifiers() {
+        const {User} = require('./User.js')
+
+        return {
+            /**
+             * Поиск
+             * @param builder
+             * @param search
+             */
+            search(builder, search) {
+                builder.where((_builder) => {
+                    _builder.where('id', 'LIKE', `%${search}%`)
+                        .orWhere('title', 'LIKE', `%${search}%`)
+                });
+            },
+
+            /**
+             * Вывод только для отображения
+             * @param builder
+             */
+            selectOnlyOutput(builder) {
+                builder
+                    .withGraphFetched(`[category(), last_homework()]`)
+                    .select('id', 'title',
+                        User.query()
+                            .modify('notBlocked')
+                            .where({
+                                group_id: ref('groups.id'),
+                                delete_id: null
+                            })
+                            .count()
+                            .as('students_count')
+                    )
+
+            },
+        }
     }
 
     static get relationMappings() {
-        const {User} = require('./User.js')
         const {Category} = require('./settings/Category')
         const {HomeworkSent} = require('./homework/HomeworkSent')
 
         return {
-            students_count: {
-                relation: Model.HasManyRelation,
-                modelClass: User,
-                join: {
-                    from: 'groups.id',
-                    to: 'users.group_id',
-                },
-            },
+            // Категория
             category: {
                 filter: query => query.select('id', 'title'),
                 relation: Model.HasOneRelation,
@@ -41,6 +58,7 @@ class Group extends Model {
                     to: 'categories.id',
                 },
             },
+            // Последнее дом задание
             last_homework: {
                 filter: query => query.select('homework_sent.homework_id', 'homework_sent.created_at'),
                 relation: Model.HasOneThroughRelation,

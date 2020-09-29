@@ -1,7 +1,13 @@
 const {Group} = require('../../../../models/Group')
 const {body, validationResult} = require('express-validator');
 
-// Вывод групп по категории
+/**
+ * Вывод групп по категории
+ * @param req
+ * @param res
+ * @return {Promise<*>}
+ * @constructor
+ */
 const GetByCategoryId = async (req, res) => {
     try {
         const user = req.user;
@@ -11,19 +17,13 @@ const GetByCategoryId = async (req, res) => {
 
         // Вывод групп
         const groups = await Group.query()
-            .where({
-                teacher_id: user.id,
-                hide: null,
-                category_id: categoryId,
-            })
-            .withGraphFetched(`[
-                category(),
-                last_homework()
-            ]`)
-            .select('id', 'title')
+            .where({teacher_id: user.id, hide: null, category_id: categoryId})
+            .modify('selectOnlyOutput')
             .page(page - 1, pageSize)
 
+        // Последняя страница
         groups.last_page = Math.ceil(groups.total / pageSize)
+        // Текущая страница
         groups.current_page = parseInt(page)
 
         return res.send(groups)
@@ -58,20 +58,20 @@ const Create = async (req, res) => {
         const user = req.user;
         const {title, category_id, method_id} = req.body
 
-        const group = await Group.query()
+        // Создание группы
+        const groupRef = await Group.query()
             .insertAndFetch({title, category_id, method_id, teacher_id: user.id})
-            .select('id', 'title')
-            .withGraphFetched(`[
-                category(),
-                last_homework()
-            ]`)
+
+        // Вывод группы
+        const group = await Group.query()
+            .findById(groupRef.id)
+            .modify('selectOnlyOutput')
 
         return res.send(group)
     } catch (e) {
         return res.status(500).send({message: e.message})
     }
 }
-
 
 /**
  * Проверка валидации
@@ -80,7 +80,6 @@ const UpdateValidate = [
     body('title').not().isEmpty().withMessage(''),
     body('category_id').not().isEmpty().withMessage(''),
 ];
-
 
 /**
  * Обновить группу
@@ -99,13 +98,14 @@ const Update = async (req, res) => {
         const {id} = req.params
         const {title, category_id} = req.body
 
-        const group = await Group.query()
+        // Обновление группы
+        await Group.query()
             .updateAndFetchById(id, {title, category_id})
-            .select('id', 'title')
-            .withGraphFetched(`[
-                category(),
-                last_homework()
-            ]`)
+
+        // Вывод группы
+        const group = await Group.query()
+                .findById(id)
+                .modify('selectOnlyOutput')
 
         return res.send(group)
     } catch (e) {
@@ -125,6 +125,7 @@ const Delete = async (req, res) => {
         const {id} = req.params
         const user = req.user;
 
+        // Обновление hide
         await Group.query()
             .updateAndFetchById(id, {hide: user.id})
 
