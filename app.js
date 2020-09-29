@@ -43,7 +43,7 @@ app.io.on('connection', socketChannels);
 
 app.use('/api/', apiRouter);
 app.use('/api/user/', laravelMiddleware, userRouter);
-app.use('/api/user/', laravelMiddleware, teacherAccessMiddleware, teacherRouter);
+app.use('/api/user/teacher/', laravelMiddleware, teacherAccessMiddleware, teacherRouter);
 
 
 module.exports = app;

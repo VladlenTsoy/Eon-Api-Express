@@ -11,7 +11,7 @@ module.exports = {
       user: 'root',
       password: 'root',
       database: 'eon_cabinet',
-      charset  : 'utf8'
+      charset  : 'utf8_general_ci'
     },
     migrations: {
       directory: `${__dirname}/database/migrations`

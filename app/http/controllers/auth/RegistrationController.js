@@ -35,8 +35,8 @@ const Index = async (req, res) => {
                 password,
                 first_name,
                 last_name,
-                access: 'teacher',
-                center_id: 32,
+                // access: 'teacher',
+                // center_id: 32,
                 setting: {}
             }
         )

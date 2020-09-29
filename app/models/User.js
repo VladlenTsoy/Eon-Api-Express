@@ -1,6 +1,5 @@
 const Model = require('../../config/knex.config');
 const Password = require('objection-password')();
-const {Group} = require('../models/Group');
 const moment = require('moment')
 
 class User extends Model {
@@ -8,7 +7,6 @@ class User extends Model {
     static hidden = ['password']
     static jsonAttributes = ['setting']
     static modifiers = {
-
         /**
          *
          * @param builder
@@ -54,16 +52,20 @@ class User extends Model {
         }
     }
 
-    static relationMappings = {
-        group: {
-            filter: query => query.select('id', 'title'),
-            relation: Model.HasOneRelation,
-            modelClass: Group,
-            join: {
-                from: 'users.group_id',
-                to: 'groups.id',
+    static get relationMappings () {
+        const {Group} = require('../models/Group');
+
+        return {
+            group: {
+                filter: query => query.select('id', 'title'),
+                relation: Model.HasOneRelation,
+                modelClass: Group,
+                join: {
+                    from: 'users.group_id',
+                    to: 'groups.id',
+                },
             },
-        },
+        }
     }
 
     $beforeInsert() {
