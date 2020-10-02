@@ -33,6 +33,28 @@ const GetByCategoryId = async (req, res) => {
 }
 
 /**
+ * Вывод группы по Id
+ * @param req
+ * @param res
+ * @return {Promise<*>}
+ * @constructor
+ */
+const GetById = async (req, res) => {
+    try {
+        const {id} = req.params
+
+        // Вывод группы
+        const group = await Group.query()
+            .findById(id)
+            .modify('selectOnlyOutput')
+
+        return res.send({data: [group]})
+    } catch (e) {
+        return res.status(500).send({message: e.message})
+    }
+}
+
+/**
  * Проверка валидации
  */
 const CreateValidate = [
@@ -135,4 +157,4 @@ const Delete = async (req, res) => {
     }
 }
 
-module.exports = {GetByCategoryId, CreateValidate, Create, UpdateValidate, Update, Delete}
+module.exports = {GetByCategoryId, CreateValidate, Create, UpdateValidate, Update, Delete, GetById}

@@ -5,6 +5,8 @@ const router = express.Router();
 
 // Вывод групп по категории
 router.get('/groups/:categoryId', GroupController.GetByCategoryId)
+// Вывод групп по категории
+router.get('/group/:id', GroupController.GetById)
 // Создать группу
 router.post('/group', GroupController.CreateValidate, GroupController.Create)
 // Обновление группы
