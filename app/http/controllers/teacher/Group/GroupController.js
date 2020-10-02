@@ -48,7 +48,7 @@ const GetById = async (req, res) => {
             .findById(id)
             .modify('selectOnlyOutput')
 
-        return res.send({data: [group]})
+        return res.send(group)
     } catch (e) {
         return res.status(500).send({message: e.message})
     }

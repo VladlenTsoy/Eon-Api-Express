@@ -4,8 +4,14 @@ const moment = require('moment')
 
 class User extends Model {
     static tableName = 'users'
-    static hidden = ['password']
+    static hidden = ['password', 'image']
     static jsonAttributes = ['setting']
+    static virtualAttributes = ['url_image']
+
+    url_image() {
+        return `${process.env.APP_URL}/image/${this.image}`;
+    }
+
     static modifiers = {
         /**
          * Вывод для контактов
