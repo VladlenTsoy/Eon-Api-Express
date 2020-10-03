@@ -25,6 +25,8 @@ router.delete('/group/:id', GroupController.Delete)
 
 // Вывод учеников по Group Id
 router.get('/students/:groupId', StudentController.GetByGroupId)
+//
+router.post('/students/:groupId/homework/dates', StudentController.GetHomeworkDatesByGroupId)
 
 
 

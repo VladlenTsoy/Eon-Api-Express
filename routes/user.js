@@ -3,9 +3,18 @@ const SelectAlgorithmController = require('../app/http/controllers/settings/algo
 const ChatController = require('../app/http/controllers/settings/chat/ChatController');
 const ContactController = require('../app/http/controllers/settings/chat/ContactController');
 const MessagesController = require('../app/http/controllers/settings/chat/MessagesController');
+const UserController = require('../app/http/controllers/UserController');
 
-const router = express.Router();
+const router = express.Router()
 
+/** Студенты **/
+
+// Блокировка по Id
+router.post('/:id/block', UserController.Block)
+// Рзазблокировка по Id
+router.post('/:id/unblock', UserController.Unblock)
+// Скрыть пользователя по Id
+router.delete('/:id', UserController.Hide)
 
 
 /** Печать листов **/
