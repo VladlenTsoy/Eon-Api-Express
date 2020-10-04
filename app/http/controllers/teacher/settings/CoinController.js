@@ -1,5 +1,12 @@
 const {Coin} = require('../../../../models/settings/Coin')
 
+/**
+ * Отправка монет ученикам
+ * @param req
+ * @param res
+ * @return {Promise<*>}
+ * @constructor
+ */
 const Sent = async (req, res) => {
     try {
         const user = req.user

@@ -9,7 +9,7 @@ class User extends Model {
     static virtualAttributes = ['url_image']
 
     url_image() {
-        return `${process.env.APP_URL}/image/${this.image}`;
+        return `${process.env.APP_URL}/${this.image}`;
     }
 
     static modifiers = {

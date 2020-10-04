@@ -28,9 +28,15 @@ router.delete('/group/:id', GroupController.Delete)
 router.get('/students/:groupId', StudentController.GetByGroupId)
 //
 router.post('/students/:groupId/homework/dates', StudentController.GetHomeworkDatesByGroupId)
-//
-router.post('/coin/sent', CoinController.Sent)
+// Обновление данных ученика
+router.post('/student/:id', StudentController.UpdateValidate, StudentController.Update)
 
+/**
+ * Монеты
+ */
+
+// Отправка монет ученикам
+router.post('/coin/sent', CoinController.Sent)
 
 
 module.exports = router;
