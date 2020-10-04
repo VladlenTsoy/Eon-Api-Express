@@ -2,8 +2,8 @@ const {Student} = require('../../../../models/users/Student')
 const moment = require('moment')
 const {HomeworkSent} = require('../../../../models/homework/HomeworkSent')
 const {HomeworkTask} = require('../../../../models/homework/HomeworkTask')
-const {_CheckBlock} = require('../../../../http/controllers/UserController')
-const SentController = require('../../../../http/controllers/teacher/Homework/SentController')
+const {_CheckBlockUsers} = require('../../../../http/controllers/UserController')
+const SentController = require('../homework/SentController')
 
 /**
  * Вывод учеников по Group Id
@@ -20,7 +20,7 @@ const GetByGroupId = async (req, res) => {
             .where({group_id: groupId, delete_id: null})
             .modify('selectOnlyTableOutput')
 
-        students = await _CheckBlock(students)
+        students = await _CheckBlockUsers(students)
 
         return res.send(students)
     } catch (e) {

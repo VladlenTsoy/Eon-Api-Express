@@ -24,7 +24,7 @@ const _GetDayBlock = async (status) => {
     if (status.unblock && moment(status.block).isAfter(status.unblock))
         return null
 
-    return moment().diff(status.block, 'days')
+    return moment(status.block).diff(moment(), 'days')
 }
 
 /**
@@ -36,10 +36,21 @@ const _GetDayBlock = async (status) => {
 const _GetDayUnblock = async (status) => {
     if (!status) return null
 
-    if (status.unblock && moment(status.block).isBefore(status.unblock))
+    if (status.unblock && moment(status.block).isAfter(status.unblock))
         return null
 
-    return moment().diff(status.block, 'days')
+    return moment(status.unblock).diff(moment(), 'days')
+}
+
+const _CheckBlock = async (user) => {
+    const status = await LockStatus.query().findOne({user_id: user.id})
+        .orderBy('created_at', 'desc')
+
+    user.is_blocked = await _GetIsBlocked(status)
+    user.day_block = await _GetDayBlock(status)
+    user.day_unblock = await _GetDayUnblock(status)
+
+    return user
 }
 
 /**
@@ -48,17 +59,8 @@ const _GetDayUnblock = async (status) => {
  * @return {Promise<unknown[]>}
  * @private
  */
-const _CheckBlock = async (users) => {
-    return await Promise.all(users.map(async user => {
-        const status = await LockStatus.query().findOne({user_id: user.id})
-            .orderBy('created_at', 'desc')
-
-        user.is_blocked = await _GetIsBlocked(status)
-        user.day_block = await _GetDayBlock(status)
-        user.day_unblock = await _GetDayUnblock(status)
-
-        return user
-    }))
+const _CheckBlockUsers = async (users) => {
+    return await Promise.all(users.map(async user => await _CheckBlock(user)))
 }
 
 /**
@@ -74,12 +76,14 @@ const Block = async (req, res) => {
         const {id} = req.params
 
         await LockStatus.query().insert({
-            block: moment().format('YYYY-MM-DD HH:mm:ss').add(5, 'days'),
+            block: moment().add(20, 'days').format('YYYY-MM-DD HH:mm:ss'),
             user_id: id,
             blocker_id: user.id
         })
 
-        const _user = await User.query().findById(id)
+        let _user = await User.query().findById(id)
+        _user = await _CheckBlock(_user)
+
         return res.send({day_block: _user.day_block})
     } catch (e) {
         return res.status(500).send({message: e.message})
@@ -99,12 +103,14 @@ const Unblock = async (req, res) => {
         const {id} = req.params
 
         await LockStatus.query().insert({
-            unblock: moment().format('YYYY-MM-DD HH:mm:ss').add(5, 'days'),
+            unblock: moment().add(20, 'days').format('YYYY-MM-DD HH:mm:ss'),
             user_id: id,
             blocker_id: user.id
         })
 
-        const _user = await User.query().findById(id)
+        let _user = await User.query().findById(id)
+        _user = await _CheckBlock(_user)
+
         return res.send({day_unblock: _user.day_unblock})
     } catch (e) {
         return res.status(500).send({message: e.message})
@@ -134,4 +140,4 @@ const Hide = async (req, res) => {
     }
 }
 
-module.exports = {_CheckBlock, Block, Unblock, Hide}
+module.exports = {_CheckBlock, Block, Unblock, Hide, _CheckBlockUsers}

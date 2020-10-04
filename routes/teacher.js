@@ -1,6 +1,7 @@
 const express = require('express');
-const GroupController = require('../app/http/controllers/teacher/Group/GroupController');
-const StudentController = require('../app/http/controllers/teacher/Student/StudentController');
+const GroupController = require('../app/http/controllers/teacher/group/GroupController');
+const StudentController = require('../app/http/controllers/teacher/student/StudentController');
+const CoinController = require('../app/http/controllers/teacher/settings/CoinController');
 
 const router = express.Router();
 
@@ -27,6 +28,8 @@ router.delete('/group/:id', GroupController.Delete)
 router.get('/students/:groupId', StudentController.GetByGroupId)
 //
 router.post('/students/:groupId/homework/dates', StudentController.GetHomeworkDatesByGroupId)
+//
+router.post('/coin/sent', CoinController.Sent)
 
 
 
