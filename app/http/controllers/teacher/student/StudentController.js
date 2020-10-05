@@ -1,13 +1,13 @@
-const {Student} = require('../../../../models/users/Student')
+const {Student} = require('models/users/Student')
 const moment = require('moment')
 const Jimp = require('jimp')
 const path = require('path');
-const {HomeworkSent} = require('../../../../models/homework/HomeworkSent')
-const {HomeworkTask} = require('../../../../models/homework/HomeworkTask')
-const UserController = require('../../../../http/controllers/UserController')
+const {HomeworkSent} = require('models/homework/HomeworkSent')
+const {HomeworkTask} = require('models/homework/HomeworkTask')
+const UserController = require('controllers/UserController')
 const SentController = require('../homework/SentController')
 const {body, validationResult} = require('express-validator');
-const fs = require("fs");
+const {DeleteProfileImageQueue} = require("jobs/profile/delete-profile-image/DeleteProfileImageQueue");
 
 /**
  * Вывод учеников по Group Id
@@ -65,10 +65,37 @@ const GetHomeworkDatesByGroupId = async (req, res) => {
             })
         )
 
-        return res.send([])
+        const groups = ['week', 'user_id'], grouped = {}
+
+        homeworkSent.forEach(function (a) {
+            groups.reduce(function (o, g, i) {
+                o[a[g]] = o[a[g]] || (i + 1 === groups.length ? [] : {})
+                return o[a[g]]
+            }, grouped).push(a)
+        })
+
+        return res.send(grouped)
     } catch (e) {
         return res.status(500).send({message: e.message})
     }
+}
+
+const _UpdateProfileImage = async ({id, image}) => {
+    // Вывод ученика для картинки
+    const checkStudent = await Student.query().findById(id)
+    // Удаление фотограции на очередь
+    await DeleteProfileImageQueue({image: checkStudent.image})
+
+    const buf = Buffer.from(image.replace(/^data:image\/\w+;base64,/, ""), 'base64')
+
+    const imagePath = `images/users/${id}/profile.${moment().valueOf()}.png`;
+    const fullImagePath = path.join(__dirname, `../../../../../public/${imagePath}`);
+    const img = await Jimp.read(buf)
+    await img.quality(75)
+    if (img.getWidth() > 250)
+        await img.resize(250, Jimp.AUTO)
+    await img.writeAsync(fullImagePath)
+    return imagePath
 }
 
 /**
@@ -99,35 +126,26 @@ const Update = async (req, res) => {
 
         const data = {group_id, first_name, last_name}
 
+        // Дата рождения
         if (date_of_birth)
             data.date_of_birth = moment(date_of_birth).format('YYYY-MM-DD')
 
+        // Телефон
         if (phone)
             data.phone = phone
 
-        if (image && image.indexOf('base64') !== -1) {
-            const checkStudent = await Student.query().findById(id)
+        // Фото
+        if (image && image.indexOf('base64') !== -1)
+            data.image = await _UpdateProfileImage({id, image})
 
-            if (checkStudent.image && checkStudent.image.indexOf('default') === -1)
-                await fs.unlinkSync(path.join(__dirname, `../../../../../public/${checkStudent.image}`))
-
-            const buf = Buffer.from(image.replace(/^data:image\/\w+;base64,/, ""), 'base64')
-
-            const imagePath = `images/users/${id}/profile.${moment().valueOf()}.png`;
-            const fullImagePath = path.join(__dirname, `../../../../../public/${imagePath}`);
-            const img = await Jimp.read(buf)
-            await img.quality(75)
-            if (img.getWidth() > 250)
-                await img.resize(250, Jimp.AUTO)
-            await img.writeAsync(fullImagePath)
-
-            data.image = imagePath
-        }
-
+        // Сохранение изменений
         const studentRef = await Student.query().updateAndFetchById(id, data)
 
+        // Вывод студента
         let student = await Student.query().findById(studentRef.id)
             .modify('selectOnlyTableOutput')
+
+        // Проверка наблокировку
         student = await UserController._CheckBlock(student)
 
         return res.send(student)
