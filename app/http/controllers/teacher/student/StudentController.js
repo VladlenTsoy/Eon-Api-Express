@@ -55,6 +55,7 @@ const GetHomeworkDatesByGroupId = async (req, res) => {
         homeworkSent = await Promise.all(
             homeworkSent.map(async sent => {
                 let tasks = await HomeworkTask.query()
+                    .withGraphFetched('task')
                     .where('homework_id', sent.homework_id)
                 tasks = await Promise.all(tasks.map(async (task) => {
                     return await SentController._UpdateResult(sent.id, task, sent.user_id, false)
@@ -80,6 +81,13 @@ const GetHomeworkDatesByGroupId = async (req, res) => {
     }
 }
 
+/**
+ *
+ * @param id
+ * @param image
+ * @return {Promise<string>}
+ * @private
+ */
 const _UpdateProfileImage = async ({id, image}) => {
     // Вывод ученика для картинки
     const checkStudent = await Student.query().findById(id)

@@ -7,6 +7,36 @@
       "mnemonics": "Мнемотехника",
       "mental_arithmetic": "Ментальная арифметика"
     },
+    "taskNames": {
+      "1": {
+        "list": "Листы",
+        "anzan": "Анзан",
+        "anzan-flash": "Флеш-Анзан",
+        "anzan-multi": "Мульти-Анзан",
+        "progression": "Прогрессия",
+        "anzan-double": "Двойной анзан",
+        "anzan-mirror": "Зеркальный-Анзан",
+        "anzan-special": "Спец-Анзан",
+        "list-addition": "Листы (+ -)",
+        "anzan-addition": "Анзан (+ -)",
+        "custom-exercises": "Свои примеры",
+        "list-multiplication": "Листы (× ÷)",
+        "anzan-multiplication": "Анзан (× ÷)"
+      },
+      "2": {
+        "words": "Список слов",
+        "numbers": "Цифра-Звук",
+        "countries": "Страны",
+        "words-list": "Список слов (Листы)",
+        "day-of-week": "Какой день недели?",
+        "digital-row": "Цифровой ряд",
+        "numbers-list": "Числа (Листы)",
+        "digital-image": "Цифра-Образ",
+        "master-system": "Главная система",
+        "personalities": "Личности",
+        "digital-picture": "Цифра-Картинка"
+      }
+    },
     "modeNames": {
       "plus": "+",
       "minus": "-",
