@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const rateLimit = require("express-rate-limit");
+require('module-alias/register')
 
 /**/
 const {corsConfig} = require("./config/cors.config");

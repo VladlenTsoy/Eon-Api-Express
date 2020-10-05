@@ -1,7 +1,14 @@
 const {ChatMember} = require('../../models/settings/chat/ChatMember');
 const {ChatMessage} = require('../../models/settings/chat/ChatMessage');
 
-module.exports.Joined = async (socket, data) => {
+/**
+ * Присоединился к чату
+ * @param socket
+ * @param data
+ * @return {Promise<void>}
+ * @constructor
+ */
+const Joined = async (socket, data) => {
     const {userId, chatId} = data
 
     await ChatMessage.query()
@@ -13,7 +20,14 @@ module.exports.Joined = async (socket, data) => {
         .update({status: 'online'})
 }
 
-module.exports.Left = async (socket, data) => {
+/**
+ * Вышел из чата
+ * @param socket
+ * @param data
+ * @return {Promise<void>}
+ * @constructor
+ */
+const Left = async (socket, data) => {
     const {userId, chatId} = data
 
     await ChatMember.query()
@@ -21,6 +35,15 @@ module.exports.Left = async (socket, data) => {
         .update({status: 'offline'})
 }
 
-module.exports.Disconnect = async (socket, data) => {
+/**
+ *
+ * @param socket
+ * @param data
+ * @return {Promise<void>}
+ * @constructor
+ */
+const Disconnect = async (socket, data) => {
     console.log(data)
 }
+
+module.exports = {Disconnect, Left, Joined}

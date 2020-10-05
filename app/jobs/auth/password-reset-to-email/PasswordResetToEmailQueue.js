@@ -10,10 +10,13 @@ module.exports.PasswordResetToEmailQueue = async ({email, code}) => {
     const jobOptions = {
         delay: 0,
         attempts: 3,
+        email,
+        code
     };
 
     // Действие очереди
-    Queue.process(async () => {
+    Queue.process(async ({data}) => {
+        const {email, code} = data
         return await PasswordRecovery({email, code});
     });
 

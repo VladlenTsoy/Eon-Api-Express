@@ -18,10 +18,12 @@ const EmailConfirmationQueue = async ({email, code}, language) => {
     const jobOptions = {
         delay: 0,
         attempts: 3,
+        email, code, language
     };
 
     // Действие очереди
-    Queue.process(async () => {
+    Queue.process(async ({data}) => {
+        const {email, code, language} = data
         return await EmailConfirmation({email, code}, language);
     });
 
