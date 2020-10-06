@@ -11,7 +11,8 @@
     "models": "app/models",
     "jobs": "app/jobs",
     "servises": "app/servises",
-    "controllers": "app/http/controllers"
+    "controllers": "app/http/controllers",
+    "utils": "utils"
   },
   "dependencies": {
     "axios": "^0.20.0",

@@ -1,9 +1,20 @@
-const {Homework} = require('../../../../models/homework/Homework')
-const {HomeworkResult} = require('../../../../models/homework/HomeworkResult')
+const {Homework} = require('models/homework/Homework')
+const {HomeworkResult} = require('models/homework/HomeworkResult')
+const checkCountAll = require('utils/checkCountAll')
 
+/**
+ *
+ * @param sentId
+ * @param task
+ * @param userId
+ * @param isTotals
+ * @return {Promise<*>}
+ * @private
+ */
 const _UpdateResult = async (sentId, task, userId, isTotals = false) => {
     const homework = await Homework.query().findById(task.homework_id)
     task.discipline_id = homework.method_id
+    task.count_all = checkCountAll(task.settings, task.discipline_id, task.task_id)
 
     const result = await HomeworkResult.query().findOne({sent_id: sentId, task_id: task.id, user_id: userId})
 
