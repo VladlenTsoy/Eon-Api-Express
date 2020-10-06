@@ -2,6 +2,7 @@ const express = require('express');
 const GroupController = require('../app/http/controllers/teacher/group/GroupController');
 const StudentController = require('../app/http/controllers/teacher/student/StudentController');
 const CoinController = require('../app/http/controllers/teacher/settings/CoinController');
+const TaskController = require('../app/http/controllers/teacher/homework/TaskController');
 
 const router = express.Router();
 
@@ -32,7 +33,12 @@ router.post('/students/:groupId/homework/dates', StudentController.GetHomeworkDa
 router.post('/student/:id', StudentController.UpdateValidate, StudentController.Update)
 
 /**
- * Монеты
+ * ДОМАШНЕЕ ЗАДАНИЕ ДЛЯ СТУДЕНТОВ
+ */
+router.get('/student/homework/:sentId/tasks', TaskController.GetBySentId)
+
+/**
+ * МОНЕТЫ
  */
 
 // Отправка монет ученикам

@@ -4,8 +4,8 @@ const Jimp = require('jimp')
 const path = require('path');
 const {HomeworkSent} = require('models/homework/HomeworkSent')
 const {HomeworkTask} = require('models/homework/HomeworkTask')
+const {HomeworkResult} = require('models/homework/HomeworkResult')
 const UserController = require('controllers/UserController')
-const SentController = require('../homework/SentController')
 const {body, validationResult} = require('express-validator');
 const {DeleteProfileImageQueue} = require("jobs/profile/delete-profile-image/DeleteProfileImageQueue");
 
@@ -50,17 +50,21 @@ const GetHomeworkDatesByGroupId = async (req, res) => {
         let homeworkSent = await HomeworkSent.query()
             .whereIn('user_id', students.map(student => student.id))
             .whereBetween('created_at', [startOfWeek, endOfWeek])
-            .select('id', 'homework_id', 'status', 'user_id', 'created_at')
+            .withGraphFetched('homework')
+            .select('id', 'status', 'user_id', 'created_at')
 
         homeworkSent = await Promise.all(
             homeworkSent.map(async sent => {
                 let tasks = await HomeworkTask.query()
                     .withGraphFetched('task')
-                    .where('homework_id', sent.homework_id)
-                tasks = await Promise.all(tasks.map(async (task) => {
-                    return await SentController._UpdateResult(sent.id, task, sent.user_id, false)
-                }))
-                sent.week = moment(sent.created_at).day()
+                    .where('homework_id', sent.homework.id)
+
+                const results = await HomeworkResult.query().whereIn('task_id', tasks.map(task => task.id))
+
+                sent.count_all = tasks.length
+                sent.count_success = results.length
+
+                sent.week = moment(sent.created_at).day() - 1
                 sent.tasks = tasks
                 return sent
             })
