@@ -65,7 +65,6 @@ const GetHomeworkDatesByGroupId = async (req, res) => {
                 sent.count_success = results.length
 
                 sent.week = moment(sent.created_at).day() - 1
-                sent.tasks = tasks
                 return sent
             })
         )

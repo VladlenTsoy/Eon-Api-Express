@@ -3,6 +3,7 @@ const GroupController = require('../app/http/controllers/teacher/group/GroupCont
 const StudentController = require('../app/http/controllers/teacher/student/StudentController');
 const CoinController = require('../app/http/controllers/teacher/settings/CoinController');
 const TaskController = require('../app/http/controllers/teacher/homework/TaskController');
+const HomeworkController = require('../app/http/controllers/teacher/homework/HomeworkController');
 
 const router = express.Router();
 
@@ -44,5 +45,13 @@ router.get('/student/homework/:sentId/tasks', TaskController.GetBySentId)
 // Отправка монет ученикам
 router.post('/coin/sent', CoinController.Sent)
 
+/**
+ * Домашние задания
+ */
+
+// Вывод по категории
+router.get('/homework/category/:categoryId', HomeworkController.GetByCategory)
+//
+router.get('/tasks/homework/:homeworkId', TaskController.GetByHomeworkId)
 
 module.exports = router;
