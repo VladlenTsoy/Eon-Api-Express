@@ -12,7 +12,7 @@ const defaultHostConfig = {
     },
 };
 
-const queueNames = ['CheckNotificationCount', 'PasswordReset', 'DeleteProfileImage'];
+const queueNames = ['CheckNotificationCount', 'PasswordReset', 'DeleteProfileImage', 'OlympiadChangeStatus'];
 
 const arena = Arena({
     Bull,

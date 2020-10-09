@@ -7,6 +7,7 @@ const HomeworkController = require('../app/http/controllers/teacher/homework/Hom
 const CategoryController = require('controllers/teacher/settings/CategoryController');
 const DisciplineController = require('controllers/teacher/settings/DisciplineController');
 const AlgorithmController = require('controllers/teacher/settings/AlgorithmController');
+const OlympiadController = require('controllers/teacher/olympiad/OlympiadController');
 
 const router = express.Router();
 
@@ -78,5 +79,14 @@ router.post('/coin/sent', CoinController.Sent)
 router.get('/homework/category/:categoryId', HomeworkController.GetByCategory)
 //
 router.get('/tasks/homework/:homeworkId', TaskController.GetByHomeworkId)
+
+/**
+ * Олимпиада
+ */
+
+// Создание олимпиады
+router.post('/olympiad', OlympiadController.CreateValidate, OlympiadController.Create)
+
+
 
 module.exports = router;
