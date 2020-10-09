@@ -5,7 +5,7 @@ const moment = require('moment')
 class User extends Model {
     static tableName = 'users'
     static hidden = ['password', 'image']
-    static jsonAttributes = ['setting']
+    static jsonAttributes = ['setting', 'methods_id']
     static virtualAttributes = ['url_image']
 
     url_image() {

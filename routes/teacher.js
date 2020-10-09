@@ -4,8 +4,33 @@ const StudentController = require('../app/http/controllers/teacher/student/Stude
 const CoinController = require('../app/http/controllers/teacher/settings/CoinController');
 const TaskController = require('../app/http/controllers/teacher/homework/TaskController');
 const HomeworkController = require('../app/http/controllers/teacher/homework/HomeworkController');
+const CategoryController = require('controllers/teacher/settings/CategoryController');
+const DisciplineController = require('controllers/teacher/settings/DisciplineController');
+const AlgorithmController = require('controllers/teacher/settings/AlgorithmController');
 
 const router = express.Router();
+
+/**
+ * Дисциплны
+ */
+
+// Вывод всех дисциплин
+router.get('/disciplines', DisciplineController.GetAll)
+
+/**
+ * Категории
+ */
+
+// Категории по дисциплине
+router.get('/:disciplineId/categories', CategoryController.GetByDisciplineId)
+
+/**
+ * Алгоритмы
+ */
+
+// Вывод алгоритмов
+router.get('/algorithms', AlgorithmController.GetAll)
+
 
 /**
  * ГРУППЫ

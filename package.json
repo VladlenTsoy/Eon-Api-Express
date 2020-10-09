@@ -12,6 +12,7 @@
     "jobs": "app/jobs",
     "servises": "app/servises",
     "controllers": "app/http/controllers",
+    "resources": "resources",
     "utils": "utils"
   },
   "dependencies": {
