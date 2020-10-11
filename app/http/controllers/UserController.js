@@ -1,6 +1,7 @@
 const moment = require('moment')
 const {LockStatus} = require('../../models/settings/LockStatus')
 const {User} = require('../../models/User')
+const OauthAccessTokenService = require('../../services/auth/OauthAccessTokenService');
 
 /**
  *
@@ -61,6 +62,22 @@ const _CheckBlock = async (user) => {
  */
 const _CheckBlockUsers = async (users) => {
     return await Promise.all(users.map(async user => await _CheckBlock(user)))
+}
+
+/**
+ *
+ * @param req
+ * @param res
+ * @return {Promise<*>}
+ * @constructor
+ */
+const GetCurrent = async (req, res) => {
+    try {
+        const user = req.user
+        return res.send(user)
+    } catch (e) {
+        return res.status(500).send({message: e.message})
+    }
 }
 
 /**
@@ -140,4 +157,22 @@ const Hide = async (req, res) => {
     }
 }
 
-module.exports = {_CheckBlock, Block, Unblock, Hide, _CheckBlockUsers}
+/**
+ * Выход
+ * @param req
+ * @param res
+ * @return {Promise<*>}
+ * @constructor
+ */
+const Logout = async (req, res) => {
+    try {
+        const user = req.user;
+        await OauthAccessTokenService.Delete(user.id)
+        req.logout();
+        res.send({status: 'success'});
+    } catch (e) {
+        return res.status(500).send({message: e.message});
+    }
+}
+
+module.exports = {_CheckBlock, Block, Unblock, Hide, _CheckBlockUsers, GetCurrent, Logout}

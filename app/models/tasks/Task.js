@@ -3,6 +3,12 @@ const moment = require('moment')
 
 class Task extends Model {
     static tableName = 'tasks'
+    static virtualAttributes = ['url_image'];
+
+    url_image() {
+        return process.env.APP_URL + `/images/training/tasks/task_${this.discipline_id}_${this.id}.svg`;
+    }
+
 
     static get relationMappings() {
         return {}

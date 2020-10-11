@@ -10,11 +10,15 @@ const router = express.Router()
 /** Студенты **/
 
 // Блокировка по Id
+router.get('/', UserController.GetCurrent)
+// Блокировка по Id
 router.post('/:id/block', UserController.Block)
 // Рзазблокировка по Id
 router.post('/:id/unblock', UserController.Unblock)
 // Скрыть пользователя по Id
-router.delete('/:id', UserController.Hide)
+router.delete('/:id(\\d+)', UserController.Hide)
+// Выход
+router.delete('/logout', UserController.Logout)
 
 
 /** Печать листов **/

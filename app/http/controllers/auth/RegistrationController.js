@@ -51,7 +51,7 @@ const Index = async (req, res) => {
         await VisitStatisticService.Create(user.id, req.body);
 
         // Создание токена
-        const token = await OauthAccessTokenService.Create(user.id, email, password);
+        const token = await OauthAccessTokenService.Create(user.id);
 
         res.send({token});
     } catch (e) {

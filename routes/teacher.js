@@ -2,12 +2,13 @@ const express = require('express');
 const GroupController = require('../app/http/controllers/teacher/group/GroupController');
 const StudentController = require('../app/http/controllers/teacher/student/StudentController');
 const CoinController = require('../app/http/controllers/teacher/settings/CoinController');
-const TaskController = require('../app/http/controllers/teacher/homework/TaskController');
+const HomeworkTaskController = require('../app/http/controllers/teacher/homework/TaskController');
 const HomeworkController = require('../app/http/controllers/teacher/homework/HomeworkController');
 const CategoryController = require('controllers/teacher/settings/CategoryController');
 const DisciplineController = require('controllers/teacher/settings/DisciplineController');
 const AlgorithmController = require('controllers/teacher/settings/AlgorithmController');
 const OlympiadController = require('controllers/teacher/olympiad/OlympiadController');
+const TaskController = require('controllers/teacher/tasks/TaskController');
 
 const router = express.Router();
 
@@ -62,7 +63,7 @@ router.post('/student/:id', StudentController.UpdateValidate, StudentController.
 /**
  * ДОМАШНЕЕ ЗАДАНИЕ ДЛЯ СТУДЕНТОВ
  */
-router.get('/student/homework/:sentId/tasks', TaskController.GetBySentId)
+router.get('/student/homework/:sentId/tasks', HomeworkTaskController.GetBySentId)
 
 /**
  * МОНЕТЫ
@@ -78,7 +79,7 @@ router.post('/coin/sent', CoinController.Sent)
 // Вывод по категории
 router.get('/homework/category/:categoryId', HomeworkController.GetByCategory)
 //
-router.get('/tasks/homework/:homeworkId', TaskController.GetByHomeworkId)
+router.get('/tasks/homework/:homeworkId', HomeworkTaskController.GetByHomeworkId)
 
 /**
  * Олимпиада
@@ -87,6 +88,9 @@ router.get('/tasks/homework/:homeworkId', TaskController.GetByHomeworkId)
 // Создание олимпиады
 router.post('/olympiad', OlympiadController.CreateValidate, OlympiadController.Create)
 
+/** Задания **/
 
+//
+router.get('/:disciplineId/tasks', TaskController.GetByDisciplineId);
 
 module.exports = router;

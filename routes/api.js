@@ -2,6 +2,7 @@ const express = require('express');
 const ForgotPasswordController = require('../app/http/controllers/auth/ForgotPasswordController');
 const LanguageController = require('../app/http/controllers/settings/LanguageController');
 const RegistrationController = require('../app/http/controllers/auth/RegistrationController');
+const LoginController = require('../app/http/controllers/auth/LoginController');
 
 const router = express.Router();
 
@@ -11,6 +12,9 @@ router.get('/', (req, res) => res.send('Work..'));
 
 /* Язык */
 router.get('/language', LanguageController.GetByAbbr);
+
+/* GET Login */
+router.post('/login', LoginController.Validate, LoginController.Index);
 
 /* GET Registration */
 router.post('/registration', RegistrationController.Validate, RegistrationController.Index);
