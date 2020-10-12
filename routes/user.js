@@ -12,6 +12,10 @@ const router = express.Router()
 // Блокировка по Id
 router.get('/', UserController.GetCurrent)
 // Блокировка по Id
+router.patch('/:id', UserController.UpdateValidate, UserController.Update)
+// Блокировка по Id
+router.post('/:id/image', UserController.UpdateImage)
+// Блокировка по Id
 router.post('/:id/block', UserController.Block)
 // Рзазблокировка по Id
 router.post('/:id/unblock', UserController.Unblock)

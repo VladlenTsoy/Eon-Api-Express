@@ -1,13 +1,31 @@
 const {Student} = require('models/users/Student')
 const moment = require('moment')
-const Jimp = require('jimp')
-const path = require('path');
 const {HomeworkSent} = require('models/homework/HomeworkSent')
 const {HomeworkTask} = require('models/homework/HomeworkTask')
 const {HomeworkResult} = require('models/homework/HomeworkResult')
 const UserController = require('controllers/UserController')
 const {body, validationResult} = require('express-validator');
 const {DeleteProfileImageQueue} = require("jobs/profile/delete-profile-image/DeleteProfileImageQueue");
+const {UploadBase64} = require("services/profile/ProfileImageService");
+
+/**
+ * Загрузка фотографии
+ * @param id
+ * @param image
+ * @return {Promise<string>}
+ * @private
+ */
+const _UpdateProfileImage = async ({id, image}) => {
+    // Вывод ученика для картинки
+    const checkStudent = await Student.query().findById(id)
+    // Удаление фотограции на очередь
+    await DeleteProfileImageQueue({image: checkStudent.image})
+
+    // Загрузка фотографий
+    return await UploadBase64(image, id)
+}
+
+/**************************************************************************/
 
 /**
  * Вывод учеников по Group Id
@@ -82,31 +100,6 @@ const GetHomeworkDatesByGroupId = async (req, res) => {
     } catch (e) {
         return res.status(500).send({message: e.message})
     }
-}
-
-/**
- *
- * @param id
- * @param image
- * @return {Promise<string>}
- * @private
- */
-const _UpdateProfileImage = async ({id, image}) => {
-    // Вывод ученика для картинки
-    const checkStudent = await Student.query().findById(id)
-    // Удаление фотограции на очередь
-    await DeleteProfileImageQueue({image: checkStudent.image})
-
-    const buf = Buffer.from(image.replace(/^data:image\/\w+;base64,/, ""), 'base64')
-
-    const imagePath = `images/users/${id}/profile.${moment().valueOf()}.png`;
-    const fullImagePath = path.join(__dirname, `../../../../../public/${imagePath}`);
-    const img = await Jimp.read(buf)
-    await img.quality(75)
-    if (img.getWidth() > 250)
-        await img.resize(250, Jimp.AUTO)
-    await img.writeAsync(fullImagePath)
-    return imagePath
 }
 
 /**

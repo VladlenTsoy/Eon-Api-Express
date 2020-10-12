@@ -2,6 +2,9 @@ const moment = require('moment')
 const {LockStatus} = require('../../models/settings/LockStatus')
 const {User} = require('../../models/User')
 const OauthAccessTokenService = require('../../services/auth/OauthAccessTokenService');
+const {UploadImage} = require('../../services/profile/ProfileImageService');
+const {DeleteProfileImageQueue} = require('jobs/profile/delete-profile-image/DeleteProfileImageQueue');
+const {body, validationResult} = require('express-validator');
 
 /**
  *
@@ -75,6 +78,72 @@ const GetCurrent = async (req, res) => {
     try {
         const user = req.user
         return res.send(user)
+    } catch (e) {
+        return res.status(500).send({message: e.message})
+    }
+}
+
+/**
+ * Проверка валидации при создании чата
+ */
+const UpdateValidate = [
+    body('email').isEmail().withMessage('Введите почту!'),
+    body('first_name').not().isEmpty().withMessage('!'),
+    body('last_name').not().isEmpty().withMessage('!'),
+];
+
+/**
+ *
+ * @param req
+ * @param res
+ * @return {Promise<*>}
+ * @constructor
+ */
+const Update = async (req, res) => {
+    // Ошибка валидации
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+        return res.status(422).json({errors: errors.array()});
+
+    try {
+        const user = req.user
+        const {fist_name, last_name, email, login, phone, date_of_birth} = req.body
+
+        const updated = await User.query().updateAndFetchById(user.id, {
+            fist_name,
+            last_name,
+            email,
+            login,
+            phone,
+            date_of_birth: date_of_birth ? moment(date_of_birth).format('YYYY-MM-DD HH:mm:ss') : null
+        })
+
+        return res.send(updated)
+    } catch (e) {
+        return res.status(500).send({message: e.message})
+    }
+}
+
+/**
+ * Обновление изображение
+ * @param req
+ * @param res
+ * @return {Promise<*>}
+ * @constructor
+ */
+const UpdateImage = async (req, res) => {
+    try {
+        const user = req.user
+        const files = req.files
+
+        // Удаление фотограции на очередь
+        await DeleteProfileImageQueue({image: user.image})
+        // Загрузка фотографии
+        const image = await UploadImage(files.image, user.id)
+        // Обновление фотографии
+        const update = await User.query().updateAndFetchById(user.id, {image})
+
+        return res.send(update)
     } catch (e) {
         return res.status(500).send({message: e.message})
     }
@@ -175,4 +244,15 @@ const Logout = async (req, res) => {
     }
 }
 
-module.exports = {_CheckBlock, Block, Unblock, Hide, _CheckBlockUsers, GetCurrent, Logout}
+module.exports = {
+    _CheckBlock,
+    Block,
+    Unblock,
+    Hide,
+    _CheckBlockUsers,
+    GetCurrent,
+    Logout,
+    Update,
+    UpdateValidate,
+    UpdateImage
+}

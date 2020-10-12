@@ -1,6 +1,6 @@
 const Bull = require('bull');
 const {redis, defaultJobOptions, settings, limiter} = require('../../../../config/bull-queue.config');
-const {DeleteImage} = require('../../../services/profile/delete-profile-image/DeleteProfileImageService');
+const {DeleteImage} = require('../../../services/profile/ProfileImageService');
 
 /**
  * Удаление фотограции на очередь
@@ -21,7 +21,7 @@ const DeleteProfileImageQueue = async ({image}) => {
 
     // Действие очереди
     Queue.process(async ({data}) => {
-        return await DeleteImage({image: data.image});
+        return await DeleteImage(data.image);
     });
 
     // Запуск очереди

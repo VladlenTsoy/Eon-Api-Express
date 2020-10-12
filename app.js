@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload');
 const logger = require('morgan');
 const rateLimit = require("express-rate-limit");
 require('module-alias/register')
@@ -33,6 +34,7 @@ app.use(logger('dev'));
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb', extended: false}));
 app.use(cookieParser());
+app.use(fileUpload());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //
